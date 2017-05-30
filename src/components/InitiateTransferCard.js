@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import { Container, Content, Form, Label, Input, Item, Picker, Text, Header, Left, Right, Body, Button, Title, Icon } from 'native-base';
+import { Container, Content, Form, Input, Item, Picker, Text, Header, Left, Right, Body, Button, Title, Icon } from 'native-base';
 
 const countries = Picker
 export default class InitiateTransfer extends Component {
@@ -53,13 +53,11 @@ export default class InitiateTransfer extends Component {
                         </Picker>
                     
                     <Form>
-                        <Item fixedLabel>
-                            <Label>Receiving account number</Label>
-                            <Input />
+                        <Item>
+                            <Input placeholder="Receiving account number" />
                         </Item>
-                        <Item fixedLabel>
-                            <Label>Amount to send</Label>
-                            <Input />
+                        <Item>
+                            <Input placeholder="Amount to send" />
                         </Item>
                     </Form>
                     <Button block primary onPress={ Actions.confirmtransfer }>
