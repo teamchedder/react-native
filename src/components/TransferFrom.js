@@ -7,8 +7,11 @@ export default class Home extends Component {
         return (
             <Container>
                 <Content>
-                    <Button rounded primary>
-                        <Text onPress={ Actions.initiatetransfer }>Initiate Transfer</Text>
+                    <Button block primary onPress={ Actions.initiatetransfercard }>
+                        <Text>Send from Debit Card</Text>
+                    </Button>
+                    <Button block primary onPress={ Actions.initiatetransferaccount }>
+                        <Text>Send from Bank Account</Text>
                     </Button>
                 </Content>
             </Container>
