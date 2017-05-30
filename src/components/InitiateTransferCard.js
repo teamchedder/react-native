@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import { Container, Content, Grid, Row, Item, Picker, Text, Header, Left, Right, Body, Button, Title, Icon, Radio } from 'native-base';
+import { Container, Content, Form, Label, Input, Item, Picker, Text, Header, Left, Right, Body, Button, Title, Icon } from 'native-base';
 
 const countries = Picker
 export default class InitiateTransfer extends Component {
@@ -15,7 +15,7 @@ export default class InitiateTransfer extends Component {
                         </Button>
                     </Left>
                     <Body>
-                        <Title>Initiate Transfer</Title>
+                        <Title>Send money from card</Title>
                     </Body>
                     <Right>
                         <Button transparent onPress={ Actions.confirmtransfer }>
@@ -24,8 +24,8 @@ export default class InitiateTransfer extends Component {
                     </Right>
                 </Header>
                 <Content>
-                    <View style={{ backgroundColor: '#ecf0f1', height: 100, borderBottomColor: '#bdc3c7', borderBottomWidth: 1, padding: 15 }}>
-                    <Text>Select receiving country</Text>
+                    {/*<View style={{ backgroundColor: '#ecf0f1', height: 100, borderBottomColor: '#bdc3c7', borderBottomWidth: 1, padding: 15 }}>*/}
+                        <Text>Select receiving country</Text>
                         <Picker
                             //supportedOrientations={['portrait','landscape']}
                             //iosHeader="Select one"
@@ -33,15 +33,38 @@ export default class InitiateTransfer extends Component {
                             //selectedValue={this.state.selected1}
                             //onValueChange={this.onValueChange.bind(this)}
                             >
-                            <Item label="Ghana" value="key0" />
-                            <Item label="Nigeria" value="key1" />
-                            <Item label="Kenya" value="key2" />
+                            <Item label="Ghana" value="ghana" />
+                            <Item label="Nigeria" value="nigeria" />
+                            <Item label="Kenya" value="kenya" />
                         </Picker>
-                    </View>
-                    <View style={{ backgroundColor: '#ecf0f1', height: 100, borderBottomColor: '#bdc3c7', borderBottomWidth: 1, padding: 15 }}>
-                    <Text>Send money to</Text>
-                    <Radio selected={false} />
-                    </View>
+                    
+                        <Text>Select receiving bank</Text>
+                        <Picker
+                            //supportedOrientations={['portrait','landscape']}
+                            //iosHeader="Select one"
+                            mode="dropdown"
+                            //selectedValue={this.state.selected1}
+                            //onValueChange={this.onValueChange.bind(this)}
+                            >
+                            <Item label="ACCESS BANK NIGERIA" value="044" />
+                            <Item label="DIAMOND BANK PLC" value="063" />
+                            <Item label="ECOBANK NIGERIA PLC" value="050" />
+                            <Item label="GTBANK PLC" value="058" />
+                        </Picker>
+                    
+                    <Form>
+                        <Item fixedLabel>
+                            <Label>Receiving account number</Label>
+                            <Input />
+                        </Item>
+                        <Item fixedLabel>
+                            <Label>Amount to send</Label>
+                            <Input />
+                        </Item>
+                    </Form>
+                    <Button block primary onPress={ Actions.confirmtransfer }>
+                        <Text>Confirm Transfer</Text>
+                    </Button>
                 </Content>
             </Container>
         )
