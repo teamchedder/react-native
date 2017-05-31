@@ -7,6 +7,21 @@ export default class GetCardDetails extends Component {
         return (
             <Container>
                 <Content>
+                    <Header>
+                        <Left>
+                            <Button transparent>
+                                <Icon name='arrow-back' />
+                            </Button>
+                        </Left>
+                        <Body>
+                            <Title>Enter card details</Title>
+                        </Body>
+                        <Right>
+                            <Button transparent>
+                                <Icon name='menu' />
+                            </Button>
+                        </Right>
+                    </Header>
                     <Text>Get Card Details</Text>
                     <Form>
                         <Item>
