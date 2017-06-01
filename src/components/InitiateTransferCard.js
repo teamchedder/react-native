@@ -5,7 +5,20 @@ import { Container, Content, Form, Input, Item, Picker, Text, Header, Left, Righ
 
 const countries = Picker
 export default class InitiateTransfer extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            selectedCountry: 'Country',
+            selectBanksName: [ 'Bank' ],
+            selectBanksCode: [ 'Code'],
+            selectedBank: 'Bank'
+        }
+    }
+
     render() {
+        let banks = this.state.selectBanksName.map((s, i) => {
+            return <Picker.Item key={i} value={s} label={s} />
+        });
         return (
             <Container>
                 <Header>
@@ -23,18 +36,34 @@ export default class InitiateTransfer extends Component {
                         </Button>
                     </Right>
                 </Header>
-                <Content>
+                <Content style={{ padding: 10}}>
                     {/*<View style={{ backgroundColor: '#ecf0f1', height: 100, borderBottomColor: '#bdc3c7', borderBottomWidth: 1, padding: 15 }}>*/}
                         <Text>Select receiving country</Text>
                         <Picker
                             //supportedOrientations={['portrait','landscape']}
                             //iosHeader="Select one"
                             mode="dropdown"
-                            //selectedValue={this.state.selected1}
-                            //onValueChange={this.onValueChange.bind(this)}
+                            selectedValue={this.state.selectedCountry}
+                            onValueChange={(countrySel) => {
+                                this.setState({selectedCountry: countrySel}); 
+                                console.log('selected: ' + countrySel);
+                                fetch('http://192.168.43.8:3500/api/banks', //using localip since emulator can;t connect
+                                    {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ country: countrySel })
+                                    })
+                                    .then((response) => response.json())
+                                    .then((responseJson) => { 
+                                        console.log(responseJson.result.data);
+                                        this.setState({ selectBanksName: Object.values(responseJson.result.data) });
+                                        this.setState({ selectBanksCode: Object.keys(responseJson.result.data) }); })
+                                    .catch((error) => { console.error(error); });
+                                }}
                             >
-                            <Item label="Ghana" value="ghana" />
+                            <Item label="Countries" value="" />
                             <Item label="Nigeria" value="nigeria" />
+                            <Item label="Ghana" value="ghana" />
                             <Item label="Kenya" value="kenya" />
                         </Picker>
                     
@@ -43,21 +72,21 @@ export default class InitiateTransfer extends Component {
                             //supportedOrientations={['portrait','landscape']}
                             //iosHeader="Select one"
                             mode="dropdown"
-                            //selectedValue={this.state.selected1}
-                            //onValueChange={this.onValueChange.bind(this)}
+                            selectedValue={this.state.selectedBank}
+                            onValueChange={(bankSel) => {
+                                this.setState({ selectedBank: bankSel});
+                            }}
                             >
-                            <Item label="ACCESS BANK NIGERIA" value="044" />
-                            <Item label="DIAMOND BANK PLC" value="063" />
-                            <Item label="ECOBANK NIGERIA PLC" value="050" />
-                            <Item label="GTBANK PLC" value="058" />
+                            { banks }
+                            
                         </Picker>
                     
                     <Form>
                         <Item>
-                            <Input placeholder="Receiving account number" />
+                            <Input placeholder="Receiving account number" keyboardType={'numeric'} />
                         </Item>
                         <Item>
-                            <Input placeholder="Amount to send" />
+                            <Input placeholder="Amount to send" keyboardType={'numeric'} />
                         </Item>
                     </Form>
                     <Button block primary onPress={ Actions.confirmtransfer }>
