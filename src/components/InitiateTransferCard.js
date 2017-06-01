@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import { Container, Content, Form, Input, Item, Picker, Text, Header, Left, Right, Body, Button, Title, Icon } from 'native-base';
+import { Container, Content, Form, Input, Item, Picker, Text, Header, Left, Right, Body, Button, Title, Icon, H3 } from 'native-base';
 
 const countries = Picker
 export default class InitiateTransfer extends Component {
@@ -11,10 +11,33 @@ export default class InitiateTransfer extends Component {
             selectedCountry: 'Country',
             selectBanksName: [ 'Bank' ],
             selectBanksCode: [ 'Code'],
-            selectedBank: 'Bank'
+            selectedBank: 'Bank',
+            selectedBankIndex: -1,
+            receivingAccountName: '',
+            accountNumberInput: ''
         }
     }
 
+    changeAccountInputValue(number){
+        this.setState({ accountNumberInput: number });
+    }
+
+    getAccountName(){
+        fetch('http://192.168.43.8:3500/api/account/validate', 
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    account_number: this.state.accountNumberInput,
+                    bank_code: this.state.selectBanksCode[this.state.selectedBankIndex]
+                })
+            })
+            .then((response) => response.json())
+            .then((responseJson) => { 
+                console.log(responseJson.result.data);
+                this.setState({ receivingAccountName: responseJson.result.data.account_name }); })
+            .catch((error) => { console.error(error); });
+    }
     render() {
         let banks = this.state.selectBanksName.map((s, i) => {
             return <Picker.Item key={i} value={s} label={s} />
@@ -74,7 +97,11 @@ export default class InitiateTransfer extends Component {
                             mode="dropdown"
                             selectedValue={this.state.selectedBank}
                             onValueChange={(bankSel) => {
-                                this.setState({ selectedBank: bankSel});
+                                let bankIndex = this.state.selectBanksName.indexOf(bankSel);
+                                this.setState({ 
+                                    selectedBank: bankSel,
+                                    selectedBankIndex: bankIndex
+                                });
                             }}
                             >
                             { banks }
@@ -83,7 +110,13 @@ export default class InitiateTransfer extends Component {
                     
                     <Form>
                         <Item>
-                            <Input placeholder="Receiving account number" keyboardType={'numeric'} />
+                            <Input placeholder="Receiving account number" keyboardType={'numeric'}
+                            onChangeText={ (accountNumberInput) => this.changeAccountInputValue(accountNumberInput) }
+                            onSubmitEditing={() => this.getAccountName()}
+                            value={this.state.accountNumberInput} />
+                        </Item>
+                        <Item>
+                            <H3>{ this.state.receivingAccountName }</H3>
                         </Item>
                         <Item>
                             <Input placeholder="Amount to send" keyboardType={'numeric'} />
