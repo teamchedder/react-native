@@ -14,13 +14,13 @@ export default class App extends Component {
         return (
             <Router>
                 <Scene key="root">
-                    <Scene key="transferfrom" initial={ true } component={ TransferFrom } hideNavBar={ true }  />
+                    <Scene key="transferfrom"  component={ TransferFrom } hideNavBar={ true }  />
                     <Scene key="initiatetransfercard" component={ InitiateTransferCard } hideNavBar={ true }/>
                     <Scene key="confirmtransfer" component={ ConfirmTransfer } hideNavBar={ true } />
                     <Scene key="getaccountdetails" component={ GetAccountDetails } hideNavBar={ true } />
                     <Scene key="getcarddetails" component={ GetCardDetails } hideNavBar={ true } />
                     <Scene key="initiatetransferaccount" component={ InitiateTransferAccount } hideNavBar={ true } />
-                    <Scene key="transferhistory" component={ TransferHistory } hideNavBar={ true } />                    
+                    <Scene key="transferhistory" initial={ true }  component={ TransferHistory } hideNavBar={ true } />                    
                 </Scene>
             </Router>
         )

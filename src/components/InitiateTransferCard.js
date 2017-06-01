@@ -12,9 +12,12 @@ export default class InitiateTransfer extends Component {
             selectBanksName: [ 'Bank' ],
             selectBanksCode: [ 'Code'],
             selectedBank: 'Bank',
+            selectedBankCode: 'Code',
             selectedBankIndex: -1,
             receivingAccountName: '',
-            accountNumberInput: ''
+            accountNumberInput: '',
+            transferAmountInput: '',
+            transferDescriptionInput: ''
         }
     }
 
@@ -23,7 +26,7 @@ export default class InitiateTransfer extends Component {
     }
 
     getAccountName(){
-        fetch('http://192.168.43.8:3500/api/account/validate', 
+        fetch('https://chedder.herokuapp.com/api/account/validate', 
             {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -38,6 +41,17 @@ export default class InitiateTransfer extends Component {
                 this.setState({ receivingAccountName: responseJson.result.data.account_name }); })
             .catch((error) => { console.error(error); });
     }
+
+    changeTransferAmountInputValue(number){
+        this.setState({ transferAmountInput: number });
+    }
+
+    changeTransferDescriptionInputValue(text){
+        this.setState({ transferDescriptionInput: text });
+    }
+
+
+    
     render() {
         let banks = this.state.selectBanksName.map((s, i) => {
             return <Picker.Item key={i} value={s} label={s} />
@@ -70,7 +84,7 @@ export default class InitiateTransfer extends Component {
                             onValueChange={(countrySel) => {
                                 this.setState({selectedCountry: countrySel}); 
                                 console.log('selected: ' + countrySel);
-                                fetch('http://192.168.43.8:3500/api/banks', //using localip since emulator can;t connect
+                                fetch('https://chedder.herokuapp.com/api/banks',
                                     {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
@@ -85,9 +99,9 @@ export default class InitiateTransfer extends Component {
                                 }}
                             >
                             <Item label="Countries" value="" />
-                            <Item label="Nigeria" value="nigeria" />
-                            <Item label="Ghana" value="ghana" />
-                            <Item label="Kenya" value="kenya" />
+                            <Item label="Nigeria" value="Nigeria" />
+                            <Item label="Ghana" value="Ghana" />
+                            <Item label="Kenya" value="Kenya" />
                         </Picker>
                     
                         <Text>Select receiving bank</Text>
@@ -119,10 +133,44 @@ export default class InitiateTransfer extends Component {
                             <H3>{ this.state.receivingAccountName }</H3>
                         </Item>
                         <Item>
-                            <Input placeholder="Amount to send" keyboardType={'numeric'} />
+                            <Input placeholder="Amount to send" 
+                            keyboardType={'numeric'} 
+                            onChangeText={ (transferAmountInput) => this.changeTransferAmountInputValue(transferAmountInput) }
+                            
+                            value={this.state.transferAmountInput} />
+                        </Item>
+                        <Item>
+                            <Input placeholder="Description (Optional)" 
+                            onChangeText={ (transferDescription) => this.changeTransferDescriptionInputValue(transferDescription) }
+                            
+                            value={this.state.transferDescriptionInput} />
                         </Item>
                     </Form>
-                    <Button block primary onPress={ Actions.confirmtransfer }>
+                    <View style={{ height: 50}}></View>
+                    <Button block primary onPress={ () => {
+                        {/*//Transfer Data includes card data because FW still require pins for test accounts and OTP is sent to predesignated number out of reach.*/}
+                        let transferData = {
+                            "firstName": "ADETOKUNBO",
+                            "lastName": "DOSUNMU",
+                            "email": "adedosunmo@gmail.com",
+                            "phoneNumber": "+2348026453737",
+                            "receivingCountry": this.state.selectedCountry,
+                            "receiver": this.state.receivingAccountName,
+                            "recipientBank": this.state.selectedBank,
+                            "recipientAccountNumber": this.state.accountNumberInput,
+                            "cardNumber": "5061020000000000094",
+                            "cvv": "347",
+                            "pinVerve": "1111",
+                            "expiryYear": "2020",
+                            "expiryMonth": "07",
+                            "pinMastercard": "1111",
+                            "totalAmount": this.state.transferAmountInput,
+                            "description": this.state.transferDescriptionInput,
+                            "chargeAmount": 45
+                        };
+                        console.log('transferData as sent by InitiateTransferCards: ' + JSON.stringify(transferData));
+                        Actions.confirmtransfer(transferData)
+                        }}>
                         <Text>Confirm Transfer</Text>
                     </Button>
                 </Content>
