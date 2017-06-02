@@ -16,7 +16,13 @@ export default class TranferHistory extends Component {
     componentDidMount(){
         let data = this.props.navigationState;
         this.setState({
-            items: [data.receiverName + ' | ' + data.receivingAmount + ' | ' +  new Date().toLocaleDateString('en-US')]
+            items: [
+                {
+                    name: data.receiverName,
+                    amount: data.receivingAmount,
+                    date: new Date().toLocaleDateString('en-US')
+                }
+            ]
         });
     }
     render() {
@@ -41,8 +47,13 @@ export default class TranferHistory extends Component {
                 <Content>
                     <List dataArray={ this.state.items }
                         renderRow={ (item) => 
-                            <ListItem>
-                                <Text>{ item }</Text>
+                            <ListItem icon>
+                                <Left><Icon name='done-all' /></Left>
+                                <Body>
+                                <Text>{ item.name }</Text>
+                                <Text note>{ item.amount }</Text>
+                                </Body>
+                                <Right><Text note>{ item.date }</Text></Right>
                             </ListItem>
                         }>
                     </List>

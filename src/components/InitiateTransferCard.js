@@ -26,7 +26,7 @@ export default class InitiateTransfer extends Component {
     }
 
     getAccountName(){
-        fetch('https://chedder.herokuapp.com/api/account/validate', 
+        fetch('http://chedder.herokuapp.com/api/account/validate', 
             {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -65,7 +65,7 @@ export default class InitiateTransfer extends Component {
                         </Button>
                     </Left>
                     <Body>
-                        <Title>Send money from card</Title>
+                        <Title>Send money</Title>
                     </Body>
                     <Right>
                         <Button transparent onPress={ Actions.confirmtransfer }>
@@ -75,7 +75,7 @@ export default class InitiateTransfer extends Component {
                 </Header>
                 <Content style={{ padding: 10}}>
                     {/*<View style={{ backgroundColor: '#ecf0f1', height: 100, borderBottomColor: '#bdc3c7', borderBottomWidth: 1, padding: 15 }}>*/}
-                        <Text>Select receiving country</Text>
+                        <Text style={{ fontWeight: 'bold'}} >Select receiving country</Text>
                         <Picker
                             //supportedOrientations={['portrait','landscape']}
                             //iosHeader="Select one"
@@ -84,7 +84,7 @@ export default class InitiateTransfer extends Component {
                             onValueChange={(countrySel) => {
                                 this.setState({selectedCountry: countrySel}); 
                                 console.log('selected: ' + countrySel);
-                                fetch('https://chedder.herokuapp.com/api/banks',
+                                fetch('http://chedder.herokuapp.com/api/banks', //using localip since emulator can;t connect
                                     {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
@@ -104,7 +104,7 @@ export default class InitiateTransfer extends Component {
                             <Item label="Kenya" value="Kenya" />
                         </Picker>
                     
-                        <Text>Select receiving bank</Text>
+                        <Text style={{ fontWeight: 'bold'}}>Select receiving bank</Text>
                         <Picker
                             //supportedOrientations={['portrait','landscape']}
                             //iosHeader="Select one"
@@ -147,7 +147,9 @@ export default class InitiateTransfer extends Component {
                         </Item>
                     </Form>
                     <View style={{ height: 50}}></View>
-                    <Button block primary onPress={ () => {
+                    <Button block 
+                        style={{ marginHorizontal: 10, backgroundColor: '#00aef0' }}
+                        onPress={ () => {
                         {/*//Transfer Data includes card data because FW still require pins for test accounts and OTP is sent to predesignated number out of reach.*/}
                         let transferData = {
                             "firstName": "ADETOKUNBO",
